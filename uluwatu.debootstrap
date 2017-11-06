@@ -56,10 +56,11 @@ first_stage_install () {
     x_feign_install () {
         local pkg="$1"
         local deb="$(debfor $pkg)"
-        local ver="$(
-            ar -p "$TARGET/$deb" control.tar.gz | zcat |
-                tar -O -xf - control ./control 2>/dev/null |
-                grep -i ^Version: | sed -e 's/[^:]*: *//' | head -n 1
+        local ver="$(in_target dpkg-deb -f "$deb" Version
+	    # fix berdasarkan saran dari : https://groups.google.com/d/msg/blankon-dev/_Z858RLgNnM/bZBCVGOnBgAJ
+            # ar -p "$TARGET/$deb" control.tar.gz | zcat |
+            #     tar -O -xf - control ./control 2>/dev/null |
+            #     grep -i ^Version: | sed -e 's/[^:]*: *//' | head -n 1
         )"
 
         mkdir -p "$TARGET/var/lib/dpkg/info"
